@@ -60,3 +60,20 @@ Each data file is capped at 10 MiB, manifests at 64 KiB, application lines at 64
 
 - [Completions usage reference](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/completions): fields, groupings, bucket bounds, pagination and cached-token semantics.
 - [Reviewing API usage and costs](https://help.openai.com/en/articles/10478918-reviewing-api-usage-and-costs): UTC dashboard clock and interrupted Chat Completions streams with missing final usage. Missing final usage is not evidence of zero token consumption.
+
+## Optional reconciliation scope
+
+Comparisons require this optional manifest field on both observations. Old manifests without it still import with unchanged observation IDs, but cannot produce comparisons.
+
+```json
+"reconciliation": {
+  "organization_id": "demo-org",
+  "project_ids": ["demo"],
+  "models": ["model-text"],
+  "time_basis": "provider_utc_bucket"
+}
+```
+
+Use one opaque organization identifier, 1–20 distinct project IDs and 1–20 distinct resolved model IDs. Lists normalize in sorted order. Every non-null row dimension must belong to its declared selection; out-of-scope rows abort rather than being dropped. These selections describe the full population being compared, including attempts from other applications in the same projects. They are declarations about the collection/filtering, not proof that it occurred correctly. Batch and text-only restrictions still apply.
+
+`time_basis` is `provider_utc_bucket` or `application_clock`. The former declares that application timestamps have been attributed to the provider's UTC usage buckets; setting the field does **not** perform or verify that attribution. Application wall-clock timestamps can differ from provider accounting time, especially near midnight. Use `application_clock` when attribution is unverified; comparisons will be blocked. Organization, project/model selections, windows, grouping and time basis must match before arithmetic. Null aggregated dimensions are never joined to named dimensions or expanded into guessed records.

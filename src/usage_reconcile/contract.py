@@ -116,7 +116,7 @@ class Manifest:
     def parse(cls, obj):
         fields = {"schema_version", "source", "start_utc", "end_utc", "acquired_at",
                   "coverage", "group_by", "batch", "modalities"}
-        require(isinstance(obj, dict) and set(obj) == fields, "invalid_manifest_fields")
+        require(isinstance(obj, dict) and fields <= set(obj) <= fields | {"reconciliation"}, "invalid_manifest_fields")
         require(type(obj["schema_version"]) is int and obj["schema_version"] == 1,
                 "unsupported_manifest")
         require(obj["source"] in ("app_events_v1", "openai_completions_v1"), "unsupported_source")
@@ -135,10 +135,34 @@ class Manifest:
         require(obj["batch"] is False and obj["modalities"] == ["text"], "unsupported_scope")
         normalized = {**obj, "start_utc": iso(start), "end_utc": iso(end),
                       "acquired_at": iso(acquired), "group_by": sorted(groups)}
+        if "reconciliation" in obj:
+            scope = obj["reconciliation"]
+            require(isinstance(scope, dict) and set(scope) ==
+                    {"organization_id", "project_ids", "models", "time_basis"}, "invalid_reconciliation_scope")
+            organization = label(scope["organization_id"])
+            selections = {}
+            for key in ("project_ids", "models"):
+                values = scope[key]
+                require(isinstance(values, list) and 1 <= len(values) <= 20, "invalid_scope_selection")
+                values = [label(value) for value in values]
+                require(len(set(values)) == len(values), "duplicate_scope_selection")
+                selections[key] = sorted(values)
+            require(scope["time_basis"] in ("provider_utc_bucket", "application_clock"), "invalid_time_basis")
+            normalized["reconciliation"] = dict(organization_id=organization, **selections,
+                                                 time_basis=scope["time_basis"])
+        # Absence serializes exactly as before, preserving old observation IDs.
         return cls(normalized)
 
     def contains(self, dt):
         return utc(self.value["start_utc"]) <= dt < utc(self.value["end_utc"])
+
+
+def _scope_row(manifest, row):
+    scope = manifest.value.get("reconciliation")
+    if scope:
+        for field, selection in (("project_id", "project_ids"), ("model", "models")):
+            if row[field] is not None:
+                require(row[field] in scope[selection], "record_outside_declared_scope")
 
 
 @dataclass(frozen=True)
@@ -174,6 +198,7 @@ def app_events(raw, manifest):
         row = dict(event_id=event_id, response_id=response, occurred_at=iso(at),
                    project_id=label(obj.get("project_id")), model=label(obj.get("model")),
                    **tokens(usage or {}))
+        _scope_row(manifest, row)
         if event_id in seen:
             require(seen[event_id] == row, "conflicting_event_id")
             duplicates += 1
@@ -250,6 +275,7 @@ def provider_pages(raw, manifest):
                         dims[dim] = None
                 row = dict(start_time=start, end_time=end, **dims,
                            num_model_requests=count(result.get("num_model_requests")), **tokens(result))
+                _scope_row(manifest, row)
                 # Required totals cannot silently become unknown through omitted provider fields.
                 require(row["input_tokens"] is not None and row["output_tokens"] is not None,
                         "missing_provider_totals")
