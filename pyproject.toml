@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "usage-reconcile-lab"
+version = "0.1.0"
+description = "Local usage snapshots with explicit unknowns and provenance"
+requires-python = ">=3.11"
+dependencies = ["duckdb==2.0.0", "pytz==2026.5"]
+
+[project.scripts]
+usage-reconcile = "usage_reconcile.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
