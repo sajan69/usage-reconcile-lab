@@ -7,6 +7,7 @@ from . import __version__
 from .contract import InputError
 from .demo import generate, demo
 from .storage import ingest, inspect
+from .analysis import compare
 
 
 def main(argv=None):
@@ -22,12 +23,17 @@ def main(argv=None):
     info = commands.add_parser("inspect", help="read one observation's provenance and quality counts")
     info.add_argument("--db", required=True)
     info.add_argument("--snapshot", required=True)
+    analysis = commands.add_parser("compare", help="compare declared matching usage populations")
+    analysis.add_argument("--db", required=True)
+    analysis.add_argument("--app", required=True)
+    analysis.add_argument("--provider", required=True)
     commands.add_parser("demo", help="run isolated synthetic ingestion checks")
     args = parser.parse_args(argv)
     try:
         if args.command == "generate": result = generate(args.out)
         elif args.command == "ingest": result = ingest(args.input, args.manifest, args.db)
         elif args.command == "inspect": result = inspect(args.db, args.snapshot)
+        elif args.command == "compare": result = compare(args.db, args.app, args.provider)
         else: result = demo()
         print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
         return 0

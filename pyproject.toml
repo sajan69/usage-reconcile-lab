@@ -14,3 +14,6 @@ usage-reconcile = "usage_reconcile.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+usage_reconcile = ["sql/*.sql"]
