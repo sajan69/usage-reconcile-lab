@@ -13,3 +13,17 @@ Unknown application counts suppress that metric's complete total and difference.
 Incomplete/unknown coverage suppresses all differences, including for present groups. Missing buckets, groups or response identity produce explicit reason codes. Blocked pairs are successful report generation with `status: blocked`, not CLI operational failures. Consumers must inspect blockers and per-metric status; exit code zero does not mean a population was reconciled. Operational errors (missing snapshots, wrong source type, unsafe database or size limits) return an error code and exit 2.
 
 These rules are conservative. They cannot establish whether telemetry represents billable model attempts, whether saved exports match their declared filters, or whether an application timestamp truly matches provider attribution. No provider credentials, costs, prices, invoice matching, cross-observation merges or production accuracy claims are involved.
+
+## Local report files
+
+```sh
+usage-reconcile export --db DB --app APP_SNAPSHOT --provider PROVIDER_SNAPSHOT --format json --out NEW_REPORT.json
+usage-reconcile export --db DB --app APP_SNAPSHOT --provider PROVIDER_SNAPSHOT --format csv --out NEW_REPORT.csv
+usage-reconcile export --db DB --app APP_SNAPSHOT --provider PROVIDER_SNAPSHOT --format html --out NEW_REPORT.html
+```
+
+All formats are capped at 2 MiB after full serialization and refuse existing outputs/symlinks using exclusive creation. New POSIX files use 0600; choose a trusted output directory. Physical write failures can leave a partial file. No overwrite/retry or directory cleanup is attempted.
+
+JSON preserves the complete aggregate report, provenance and nulls. CSV has one row per metric/group, repeats context/warnings and uses an empty cell for unknown values with a status/reason. A blocked report has one explanation row. Known subtotals and unknown counts are separate columns. All CSV cells are quoted; potentially formula-like text, including whitespace/fullwidth forms, is prefixed with an apostrophe. This reduces common spreadsheet formula risks but is not a guarantee for every spreadsheet importer. Numeric signed differences remain numbers.
+
+HTML is a standalone, script-free report. Open it locally in a browser; no server, API, remote assets or credentials are used. Text, including provenance JSON, is HTML-escaped. A restrictive meta CSP disallows scripts/network requests and permits only the fixed inline stylesheet. Expandable details expose subtotals/unknown counts and provenance; horizontally scrollable tables support narrow screens. It has no editing, collection or download endpoints. Sharing any report also shares its retained organization/project/model labels and provenance; review these first.

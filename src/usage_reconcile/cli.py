@@ -8,6 +8,7 @@ from .contract import InputError
 from .demo import generate, demo
 from .storage import ingest, inspect
 from .analysis import compare
+from .reports import export
 
 
 def main(argv=None):
@@ -27,6 +28,12 @@ def main(argv=None):
     analysis.add_argument("--db", required=True)
     analysis.add_argument("--app", required=True)
     analysis.add_argument("--provider", required=True)
+    output = commands.add_parser("export", help="write one bounded comparison report without overwrite")
+    output.add_argument("--db", required=True)
+    output.add_argument("--app", required=True)
+    output.add_argument("--provider", required=True)
+    output.add_argument("--format", choices=["json", "csv", "html"], required=True)
+    output.add_argument("--out", required=True)
     commands.add_parser("demo", help="run isolated synthetic ingestion checks")
     args = parser.parse_args(argv)
     try:
@@ -34,6 +41,8 @@ def main(argv=None):
         elif args.command == "ingest": result = ingest(args.input, args.manifest, args.db)
         elif args.command == "inspect": result = inspect(args.db, args.snapshot)
         elif args.command == "compare": result = compare(args.db, args.app, args.provider)
+        elif args.command == "export":
+            result = export(compare(args.db, args.app, args.provider), args.out, args.format)
         else: result = demo()
         print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
         return 0
