@@ -1,9 +1,29 @@
 # Usage Reconcile Lab
 
-An offline Python/SQL project for comparing application AI usage telemetry with provider usage exports, keeping missing measurements distinct from recorded zero usage.
+Local Python/DuckDB ingestion for application AI usage telemetry and OpenAI Completions Usage API response exports. Missing measurements remain SQL `NULL`; recorded zero stays zero. Each import creates an immutable observation with source context, hashes and quality counts.
 
-Comparisons are scoped to matching UTC time windows, project/model groupings and supported text-usage fields. Duplicate events, incomplete exports and incompatible aggregation levels must remain visible rather than producing misleading totals.
+Python 3.11+ is required. No provider credentials, network calls or paid services are used.
 
-The repository currently contains this project introduction only; runnable code, setup instructions and evaluation results are not available yet.
+```sh
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install .
+usage-reconcile demo
+python -m unittest discover -v
+```
 
-No provider credentials or paid API calls are required for the intended local workflow. Real exports, prompts, completions and credentials do not belong in this repository. Usage comparisons are not invoice certification or evidence of billing errors.
+To retain the synthetic inputs and import them into a local database:
+
+```sh
+mkdir -p data
+usage-reconcile generate --out data/example
+usage-reconcile ingest data/example/app.jsonl --manifest data/example/app-manifest.json --db data/example.duckdb
+usage-reconcile ingest data/example/provider.json --manifest data/example/provider-manifest.json --db data/example.duckdb
+usage-reconcile inspect --db data/example.duckdb --snapshot <snapshot_id_from_ingest>
+```
+
+The demo checks seven synthetic input events → six unique event IDs, one unknown-usage event, one repeated response ID and two provider buckets. Reimporting the same file/context inserts zero rows. These are ingestion checks, not a reconciliation result or real-provider evaluation. Comparison SQL, report exports and performance measurements are not included in this version.
+
+See [input contracts](docs/INPUTS.md) for source fields, scope declarations and limits, and [storage behavior](docs/STORAGE.md) for transactions and security assumptions. The [CI workflow](.github/workflows/ci.yml) tests Python 3.11–3.13.
+
+Real exports, credentials, prompts and completions must remain outside Git. The database is not encrypted. Usage observations do not certify an invoice or establish a billing error.
