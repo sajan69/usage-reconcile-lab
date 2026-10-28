@@ -11,3 +11,5 @@ data/
 exports/
 *.duckdb*
 *.db
+node_modules/
+browser/artifacts/

@@ -1,0 +1,465 @@
+{
+  "app": {
+    "manifest": {
+      "acquired_at": "2026-10-04T00:00:00.000000Z",
+      "batch": false,
+      "coverage": "complete",
+      "end_utc": "2026-10-03T00:00:00.000000Z",
+      "group_by": [
+        "model",
+        "project_id"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "reconciliation": {
+        "models": [
+          "matched-text-model",
+          "synthetic-text-model",
+          "zero-text-model"
+        ],
+        "organization_id": "synthetic-org",
+        "project_ids": [
+          "demo-project"
+        ],
+        "time_basis": "provider_utc_bucket"
+      },
+      "schema_version": 1,
+      "source": "app_events_v1",
+      "start_utc": "2026-10-01T00:00:00.000000Z"
+    },
+    "projection_sha256": "9944d302e16d12af7423565dbe024ce4b20232e397d4b90a8163b7e7ceffb84f",
+    "quality": {
+      "exact_projected_duplicates": 1,
+      "ignored_fields": 0,
+      "input_records": 10,
+      "records": 9,
+      "repeated_response_ids": 1,
+      "unknown_usage_records": 1
+    },
+    "raw_sha256": "9c754e8d81b77100ac86877cf01bcb8a4d0e1e961155228d9e99de61bde8619d",
+    "snapshot_id": "0b9059f2fafc59118f268403c3a13675a461af81d7ddc418fcd259267f58afd3",
+    "source": "app_events_v1"
+  },
+  "blockers": [],
+  "provider": {
+    "manifest": {
+      "acquired_at": "2026-10-04T00:00:00.000000Z",
+      "batch": false,
+      "coverage": "complete",
+      "end_utc": "2026-10-03T00:00:00.000000Z",
+      "group_by": [
+        "model",
+        "project_id"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "reconciliation": {
+        "models": [
+          "matched-text-model",
+          "synthetic-text-model",
+          "zero-text-model"
+        ],
+        "organization_id": "synthetic-org",
+        "project_ids": [
+          "demo-project"
+        ],
+        "time_basis": "provider_utc_bucket"
+      },
+      "schema_version": 1,
+      "source": "openai_completions_v1",
+      "start_utc": "2026-10-01T00:00:00.000000Z"
+    },
+    "projection_sha256": "9c97432bde02f079d9afd54d41aca2bf531bdc0ec2c7564d1d1df15ea481857d",
+    "quality": {
+      "buckets": 2,
+      "capture_attested": false,
+      "coverage_declared": "complete",
+      "has_more": false,
+      "missing_daily_buckets": 0,
+      "records": 5
+    },
+    "raw_sha256": "b569929e6a7a346e0bc5a3bdfcf6499f5fd1e95215184b59f9e9be3f320fa7a4",
+    "snapshot_id": "f5a0af4e041159cdd12821dee71f51376829727fe39f23d23bfe96dc5ed353d3",
+    "source": "openai_completions_v1"
+  },
+  "report_version": 1,
+  "rows": [
+    {
+      "day": "2026-10-01",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": 10,
+          "difference_provider_minus_app": 0,
+          "provider": 10,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "input_tokens": {
+          "app": 25,
+          "difference_provider_minus_app": 0,
+          "provider": 25,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "output_tokens": {
+          "app": 5,
+          "difference_provider_minus_app": 0,
+          "provider": 5,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "requests": {
+          "app": 1,
+          "difference_provider_minus_app": 0,
+          "provider": 1,
+          "reasons": [],
+          "status": "conditional_comparison"
+        }
+      },
+      "model": "matched-text-model",
+      "observations": {
+        "ambiguous_responses": 0,
+        "app_events": 1,
+        "app_known_cached": 10,
+        "app_known_input": 25,
+        "app_known_output": 5,
+        "day": "2026-10-01",
+        "model": "matched-text-model",
+        "project_id": "demo-project",
+        "provider_cached": 10,
+        "provider_input": 25,
+        "provider_output": 5,
+        "provider_requests": 1,
+        "unidentified_responses": 0,
+        "unknown_cached": 0,
+        "unknown_input": 0,
+        "unknown_output": 0
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    },
+    {
+      "day": "2026-10-01",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": 4,
+          "reasons": [
+            "app_usage_unknown",
+            "app_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "input_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": 20,
+          "reasons": [
+            "app_usage_unknown",
+            "app_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "output_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": 6,
+          "reasons": [
+            "app_usage_unknown",
+            "app_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "requests": {
+          "app": 3,
+          "difference_provider_minus_app": 0,
+          "provider": 3,
+          "reasons": [],
+          "status": "conditional_comparison"
+        }
+      },
+      "model": "synthetic-text-model",
+      "observations": {
+        "ambiguous_responses": 0,
+        "app_events": 3,
+        "app_known_cached": 4,
+        "app_known_input": 10,
+        "app_known_output": 2,
+        "day": "2026-10-01",
+        "model": "synthetic-text-model",
+        "project_id": "demo-project",
+        "provider_cached": 4,
+        "provider_input": 20,
+        "provider_output": 6,
+        "provider_requests": 3,
+        "unidentified_responses": 0,
+        "unknown_cached": 2,
+        "unknown_input": 1,
+        "unknown_output": 1
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    },
+    {
+      "day": "2026-10-01",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": 0,
+          "difference_provider_minus_app": 0,
+          "provider": 0,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "input_tokens": {
+          "app": 0,
+          "difference_provider_minus_app": 0,
+          "provider": 0,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "output_tokens": {
+          "app": 0,
+          "difference_provider_minus_app": 0,
+          "provider": 0,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "requests": {
+          "app": 1,
+          "difference_provider_minus_app": 0,
+          "provider": 1,
+          "reasons": [],
+          "status": "conditional_comparison"
+        }
+      },
+      "model": "zero-text-model",
+      "observations": {
+        "ambiguous_responses": 0,
+        "app_events": 1,
+        "app_known_cached": 0,
+        "app_known_input": 0,
+        "app_known_output": 0,
+        "day": "2026-10-01",
+        "model": "zero-text-model",
+        "project_id": "demo-project",
+        "provider_cached": 0,
+        "provider_input": 0,
+        "provider_output": 0,
+        "provider_requests": 1,
+        "unidentified_responses": 0,
+        "unknown_cached": 0,
+        "unknown_input": 0,
+        "unknown_output": 0
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    },
+    {
+      "day": "2026-10-02",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": 10,
+          "difference_provider_minus_app": 0,
+          "provider": 10,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "input_tokens": {
+          "app": 25,
+          "difference_provider_minus_app": 2,
+          "provider": 27,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "output_tokens": {
+          "app": 5,
+          "difference_provider_minus_app": 0,
+          "provider": 5,
+          "reasons": [],
+          "status": "conditional_comparison"
+        },
+        "requests": {
+          "app": 1,
+          "difference_provider_minus_app": 0,
+          "provider": 1,
+          "reasons": [],
+          "status": "conditional_comparison"
+        }
+      },
+      "model": "matched-text-model",
+      "observations": {
+        "ambiguous_responses": 0,
+        "app_events": 1,
+        "app_known_cached": 10,
+        "app_known_input": 25,
+        "app_known_output": 5,
+        "day": "2026-10-02",
+        "model": "matched-text-model",
+        "project_id": "demo-project",
+        "provider_cached": 10,
+        "provider_input": 27,
+        "provider_output": 5,
+        "provider_requests": 1,
+        "unidentified_responses": 0,
+        "unknown_cached": 0,
+        "unknown_input": 0,
+        "unknown_output": 0
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    },
+    {
+      "day": "2026-10-02",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": null,
+          "reasons": [
+            "app_usage_unknown",
+            "app_value_unknown",
+            "provider_value_unknown",
+            "repeated_response_identity"
+          ],
+          "status": "withheld"
+        },
+        "input_tokens": {
+          "app": 17,
+          "difference_provider_minus_app": null,
+          "provider": 12,
+          "reasons": [
+            "repeated_response_identity"
+          ],
+          "status": "withheld"
+        },
+        "output_tokens": {
+          "app": 5,
+          "difference_provider_minus_app": null,
+          "provider": 4,
+          "reasons": [
+            "repeated_response_identity"
+          ],
+          "status": "withheld"
+        },
+        "requests": {
+          "app": 3,
+          "difference_provider_minus_app": null,
+          "provider": 2,
+          "reasons": [
+            "repeated_response_identity"
+          ],
+          "status": "withheld"
+        }
+      },
+      "model": "synthetic-text-model",
+      "observations": {
+        "ambiguous_responses": 2,
+        "app_events": 3,
+        "app_known_cached": 0,
+        "app_known_input": 17,
+        "app_known_output": 5,
+        "day": "2026-10-02",
+        "model": "synthetic-text-model",
+        "project_id": "demo-project",
+        "provider_cached": null,
+        "provider_input": 12,
+        "provider_output": 4,
+        "provider_requests": 2,
+        "unidentified_responses": 0,
+        "unknown_cached": 1,
+        "unknown_input": 0,
+        "unknown_output": 0
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    },
+    {
+      "day": "2026-10-02",
+      "metrics": {
+        "cached_input_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": null,
+          "reasons": [
+            "app_group_unobserved",
+            "app_value_unknown",
+            "provider_group_unobserved",
+            "provider_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "input_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": null,
+          "reasons": [
+            "app_group_unobserved",
+            "app_value_unknown",
+            "provider_group_unobserved",
+            "provider_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "output_tokens": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": null,
+          "reasons": [
+            "app_group_unobserved",
+            "app_value_unknown",
+            "provider_group_unobserved",
+            "provider_value_unknown"
+          ],
+          "status": "withheld"
+        },
+        "requests": {
+          "app": null,
+          "difference_provider_minus_app": null,
+          "provider": null,
+          "reasons": [
+            "app_group_unobserved",
+            "app_value_unknown",
+            "provider_group_unobserved",
+            "provider_value_unknown"
+          ],
+          "status": "withheld"
+        }
+      },
+      "model": "zero-text-model",
+      "observations": {
+        "ambiguous_responses": null,
+        "app_events": null,
+        "app_known_cached": null,
+        "app_known_input": null,
+        "app_known_output": null,
+        "day": null,
+        "model": null,
+        "project_id": null,
+        "provider_cached": null,
+        "provider_input": null,
+        "provider_output": null,
+        "provider_requests": null,
+        "unidentified_responses": null,
+        "unknown_cached": null,
+        "unknown_input": null,
+        "unknown_output": null
+      },
+      "project_id": "demo-project",
+      "provider_bucket_present": true
+    }
+  ],
+  "status": "conditional",
+  "summary": {
+    "comparable_metrics": 13,
+    "groups": 6,
+    "withheld_metrics": 11
+  },
+  "warnings": [
+    "Scope, coverage and timestamp attribution are caller declarations, not provider attestation.",
+    "Different acquisition times and late provider updates can change observations.",
+    "Differences are not evidence of billing errors or invoice amounts."
+  ]
+}

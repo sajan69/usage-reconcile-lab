@@ -60,3 +60,16 @@ class CliTests(unittest.TestCase):
                                  text=True, capture_output=True, timeout=15)
         self.assertEqual(process.returncode, 0, process.stderr)
         self.assertEqual(json.loads(process.stdout)["provider"]["inserted"], 2)
+
+    def test_comparison_demo_exact_findings_and_fresh_outputs(self):
+        from usage_reconcile.demo import comparison_demo
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "new-reports"
+            result = comparison_demo(out)
+            self.assertEqual(result["summary"], {"groups": 6, "comparable_metrics": 13, "withheld_metrics": 11})
+            self.assertEqual(result["checked_input_difference"], 2)
+            self.assertEqual(result["checked_zero_difference"], 0)
+            self.assertEqual(set(result["exports"]), {"json", "csv", "html"})
+            report = json.loads((out / "comparison.json").read_text())
+            self.assertEqual(len(report["rows"]), 6)
+            with self.assertRaises(FileExistsError): comparison_demo(out)

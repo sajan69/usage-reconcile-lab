@@ -5,7 +5,7 @@ import sys
 import duckdb
 from . import __version__
 from .contract import InputError
-from .demo import generate, demo
+from .demo import generate, demo, comparison_demo
 from .storage import ingest, inspect
 from .analysis import compare
 from .reports import export
@@ -35,6 +35,8 @@ def main(argv=None):
     output.add_argument("--format", choices=["json", "csv", "html"], required=True)
     output.add_argument("--out", required=True)
     commands.add_parser("demo", help="run isolated synthetic ingestion checks")
+    comparison = commands.add_parser("demo-comparison", help="run exact synthetic comparison and optional reports")
+    comparison.add_argument("--out", help="new directory for JSON/CSV/HTML reports")
     args = parser.parse_args(argv)
     try:
         if args.command == "generate": result = generate(args.out)
@@ -43,6 +45,7 @@ def main(argv=None):
         elif args.command == "compare": result = compare(args.db, args.app, args.provider)
         elif args.command == "export":
             result = export(compare(args.db, args.app, args.provider), args.out, args.format)
+        elif args.command == "demo-comparison": result = comparison_demo(args.out)
         else: result = demo()
         print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
         return 0

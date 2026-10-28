@@ -1,0 +1,6 @@
+{
+  "name": "usage-report-browser-checks",
+  "private": true,
+  "scripts": {"test": "node report.cjs"},
+  "devDependencies": {"playwright": "1.58.0"}
+}

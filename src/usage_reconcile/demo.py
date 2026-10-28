@@ -63,3 +63,56 @@ def demo():
         assert inspect(db, app["snapshot_id"])["quality"] == app["quality"]
         return dict(source="synthetic", app=app, provider=provider, reimport=repeat,
                     interpretation="Ingestion checks only; no usage reconciliation or accuracy claim.")
+
+
+def comparison_demo(out=None):
+    """End-to-end synthetic comparison with independently specified expected totals."""
+    import json
+    from .analysis import compare
+    from .reports import export
+    with tempfile.TemporaryDirectory(prefix="usage-comparison-") as tmp:
+        root = Path(tmp); folder = root / "fixture"; generate(folder)
+        models = ["synthetic-text-model", "matched-text-model", "zero-text-model"]
+        scope = dict(organization_id="synthetic-org", project_ids=["demo-project"], models=models,
+                     time_basis="provider_utc_bucket")
+        for name in ("app-manifest.json", "provider-manifest.json"):
+            path = folder / name; obj = json.loads(path.read_text()); obj["reconciliation"] = scope
+            path.write_text(canonical(obj) + "\n")
+        rows = [json.loads(line) for line in (folder / "app.jsonl").read_text().splitlines()]
+        for day in (1, 2):
+            rows.append(dict(event_id=f"matched-{day}", response_id=f"matched-response-{day}",
+                             occurred_at=f"2026-10-0{day}T12:00:00Z", project_id="demo-project",
+                             model="matched-text-model", usage=dict(input_tokens=25, output_tokens=5,
+                                                                    input_cached_tokens=10)))
+        rows.append(dict(event_id="zero", response_id="zero-response", occurred_at="2026-10-01T13:00:00Z",
+                         project_id="demo-project", model="zero-text-model",
+                         usage=dict(input_tokens=0, output_tokens=0, input_cached_tokens=0)))
+        (folder / "app.jsonl").write_text("\n".join(canonical(row) for row in rows) + "\n")
+        path = folder / "provider.json"; provider = json.loads(path.read_text())
+        for i, bucket in enumerate(provider["pages"][0]["data"]):
+            bucket["results"].append(dict(object="organization.usage.completions.result", project_id="demo-project",
+                model="matched-text-model", input_tokens=25 + i * 2, output_tokens=5,
+                input_cached_tokens=10, num_model_requests=1))
+        provider["pages"][0]["data"][0]["results"].append(dict(object="organization.usage.completions.result",
+            project_id="demo-project", model="zero-text-model", input_tokens=0, output_tokens=0,
+            input_cached_tokens=0, num_model_requests=1))
+        path.write_text(canonical(provider) + "\n")
+        db = root / "lab.duckdb"
+        app = ingest(folder / "app.jsonl", folder / "app-manifest.json", db)
+        provider = ingest(folder / "provider.json", folder / "provider-manifest.json", db)
+        report = compare(db, app["snapshot_id"], provider["snapshot_id"])
+        assert report["summary"] == dict(groups=6, comparable_metrics=13, withheld_metrics=11)
+        lookup = {(r["day"], r["model"]): r for r in report["rows"]}
+        assert lookup["2026-10-02", "matched-text-model"]["metrics"]["input_tokens"]["difference_provider_minus_app"] == 2
+        assert lookup["2026-10-01", "zero-text-model"]["metrics"]["input_tokens"]["difference_provider_minus_app"] == 0
+        assert lookup["2026-10-01", "synthetic-text-model"]["observations"]["app_known_input"] == 10
+        assert lookup["2026-10-01", "synthetic-text-model"]["metrics"]["input_tokens"]["app"] is None
+        assert app["inserted"] == 9 and provider["inserted"] == 5
+        result = dict(source="synthetic", app_snapshot=app["snapshot_id"], provider_snapshot=provider["snapshot_id"],
+                      app_events=9, app_projected_duplicates=1, provider_groups=5, summary=report["summary"],
+                      checked_input_difference=2, checked_zero_difference=0)
+        if out is not None:
+            target = Path(out); target.mkdir(mode=0o700, exist_ok=False)
+            result["exports"] = {fmt: export(report, target / ("comparison." + fmt), fmt)
+                                 for fmt in ("json", "csv", "html")}
+        return result
