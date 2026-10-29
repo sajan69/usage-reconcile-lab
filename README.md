@@ -9,6 +9,7 @@ python -m venv .venv
 . .venv/bin/activate
 python -m pip install .
 usage-reconcile demo
+usage-reconcile benchmark --rows 800 --repeats 3
 python -m unittest discover -v
 ```
 
@@ -33,7 +34,7 @@ usage-reconcile compare --db DB --app APP_SNAPSHOT --provider PROVIDER_SNAPSHOT
 usage-reconcile export --db DB --app APP_SNAPSHOT --provider PROVIDER_SNAPSHOT --format csv --out NEW_REPORT.csv
 ```
 
-Comparisons require matching explicit population/time declarations and fully grouped project/model observations. Missing data, ambiguous response identities and incomplete coverage withhold differences. Known subtotals stay separate from complete totals. No absent group becomes zero. The comparison demo checks nine synthetic events across six daily groups: 13 conditional metric comparisons and 11 withheld values. It includes a recorded zero difference and a two-token observed difference. These are exact fixture checks, not real-provider accuracy or billing findings. Workload timings are not measured in this version.
+Comparisons require matching explicit population/time declarations and fully grouped project/model observations. Missing data, ambiguous response identities and incomplete coverage withhold differences. Known subtotals stay separate from complete totals. No absent group becomes zero. The comparison demo checks nine synthetic events across six daily groups: 13 conditional metric comparisons and 11 withheld values. It includes a recorded zero difference and a two-token observed difference. These are exact fixture checks, not real-provider accuracy or billing findings. The [evaluation report](docs/EVALUATION.md) records the bounded import/query workload, actual timings and practical limits.
 
 See [input contracts](docs/INPUTS.md) for source fields, scope declarations and limits, [comparison/report semantics and worked findings](docs/COMPARISONS.md), and [storage behavior](docs/STORAGE.md) for transactions and security assumptions. The [CI workflow](.github/workflows/ci.yml) tests Python 3.11–3.13.
 

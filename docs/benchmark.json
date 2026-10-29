@@ -1,0 +1,89 @@
+{
+  "benchmark_version": 1,
+  "completed": true,
+  "environment": {
+    "database_memory_limit": "256MB",
+    "database_threads": 2,
+    "duckdb": "2.0.0",
+    "logical_cpus": 4,
+    "package": "0.2.0",
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "python": "3.12.15",
+    "pytz": "2026.5",
+    "storage": "temporary directory; filesystem not characterized"
+  },
+  "median_ms": {
+    "app_import_ms": 540.8742210000241,
+    "app_reimport_ms": 48.739361000002646,
+    "comparison_ms": 40.531288000011045,
+    "provider_import_ms": 44.03517599996576
+  },
+  "method": {
+    "baseline": "none; not a throughput, production capacity or improvement comparison",
+    "cache": "no explicit warmup or cache clearing; repeated inputs may benefit from OS caches",
+    "clock": "perf_counter wall-clock milliseconds",
+    "excluded": "fixture generation/writes, assertions, report serialization/exports, browser, CLI startup, network/TLS",
+    "fresh_database_each_repetition": true,
+    "included": "input reads/parsing/validation/dedup, database open/close, provenance and transaction; comparison includes metadata, SQL and report assembly",
+    "order": [
+      "app_import_ms",
+      "provider_import_ms",
+      "app_reimport_ms",
+      "comparison_ms"
+    ]
+  },
+  "recorded_at": "2026-10-29T00:56:57.504218+00:00",
+  "samples": [
+    {
+      "app_import_ms": 540.8742210000241,
+      "app_reimport_ms": 54.85344499999201,
+      "comparison_ms": 42.118373000050724,
+      "provider_import_ms": 50.10051099998236,
+      "repetition": 1
+    },
+    {
+      "app_import_ms": 529.825915999993,
+      "app_reimport_ms": 46.69724100000394,
+      "comparison_ms": 40.531288000011045,
+      "provider_import_ms": 44.03517599996576,
+      "repetition": 2
+    },
+    {
+      "app_import_ms": 550.5488480000054,
+      "app_reimport_ms": 48.739361000002646,
+      "comparison_ms": 39.64565500001527,
+      "provider_import_ms": 41.97298200000432,
+      "repetition": 3
+    }
+  ],
+  "source": "synthetic",
+  "workload": {
+    "dataset_sha256": "0e699f841022134aad460d22f258b44677099a350ccbd629194830cc26cda1b3",
+    "days": 2,
+    "exact_duplicates": 40,
+    "expected_summary": {
+      "comparable_metrics": 20,
+      "groups": 8,
+      "withheld_metrics": 12
+    },
+    "file_bytes": {
+      "app-manifest.json": 422,
+      "app.jsonl": 177167,
+      "provider-manifest.json": 430,
+      "provider.json": 1797
+    },
+    "file_sha256": {
+      "app-manifest.json": "ecdc503fbd71d6e4490b85637b4de9e10b1693068d6448e4b11a99660127fe7b",
+      "app.jsonl": "346bbde787ee37de423a4258e066e796b93537522b8a4cbb2bac07b98ead525b",
+      "provider-manifest.json": "5af2b05f3bf9a4950d298e2ef0431c09947dff44e2b0b47dd90e5839dd6d9378",
+      "provider.json": "c85a85f85eeb5edc827e0313fd9e8ec988c8f643c3e0c3fa1dbb109cd6ee5b75"
+    },
+    "input_app_records": 840,
+    "models": 2,
+    "projects": 2,
+    "provider_groups": 8,
+    "repetitions": 3,
+    "unique_app_events": 800,
+    "unknown_usage_events": 80
+  }
+}

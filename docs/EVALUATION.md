@@ -28,3 +28,20 @@ Timers use `time.perf_counter` wall-clock milliseconds. Fixture generation/write
 The data path is strict local parsing → normalized immutable observations → read-only SQL → reasoned metrics → bounded exports. Keeping raw extras out of storage reduces accidental retention; it does not sanitize meaningful labels or encrypt the database. Python validates scope and types before DuckDB writes, while a transaction keeps provenance and rows together. SQL computes observed counts/subtotals, and application code withholds unsafe arithmetic according to explicit comparability rules.
 
 Caller declarations cannot authenticate export origin, population completeness or provider timestamp attribution. The supported provider adapter is deliberately narrow: daily text/non-batch completion-usage buckets grouped by project and model for comparisons. Null aggregated dimensions remain readable but do not match named groups. No live provider integration, costs/prices, invoice certification, secrets scanning, cross-observation correction merge, encrypted storage, hostile-database sandbox or physical power-loss certification is claimed. See [input contracts](INPUTS.md) and [storage assumptions](STORAGE.md).
+
+## Recorded workload sample
+
+The [machine-readable record](benchmark.json) was produced by [CI run 40797307783](https://github.com/sajan69/usage-reconcile-lab/actions/runs/40797307783) at source commit [836124ba](https://github.com/sajan69/usage-reconcile-lab/commit/836124ba4f29404f4dd74045baf31bb5e6a91284), at **2026-10-29 00:56:57 UTC**. This is a recorded sample, not a performance promise; subsequent CI runs produce new measurements.
+
+Workload: 800 unique application events, 840 input lines, 40 exact duplicates, 80 unknown-usage events, eight provider result groups and three repetitions. Every repetition verified 20 conditional metrics, 12 withheld metrics, the intentional +3 input difference, all other eligible zero differences and no rows inserted on reimport. Application input is 177,167 bytes; provider input is 1,797 bytes. Combined dataset SHA-256: `0e699f841022134aad460d22f258b44677099a350ccbd629194830cc26cda1b3`. All four input/manifest hashes and every individual timing are in the JSON record.
+
+| Operation | Median wall-clock ms, three repetitions |
+| --- | ---: |
+| Fresh application import | 540.874 |
+| Provider import into existing schema | 44.035 |
+| Application reimport | 48.739 |
+| Read-only comparison | 40.531 |
+
+Environment: Python 3.12.15, DuckDB 2.0.0, pytz 2026.5, package 0.2.0; Linux 7.0.0-1017-azure x86_64/glibc 2.39; four reported logical CPUs on a shared GitHub runner. Database settings are two threads and a 256 MiB memory limit. The temporary filesystem was not characterized. There is no dedicated hardware, explicit warmup/cache reset, comparative baseline or concurrent client load.
+
+The full validation suite contains 73 Python test methods across contract, storage, CLI, scope, comparison, report and benchmark behavior, plus four real Chromium report checks. CI installs the built package on Python 3.11, 3.12 and 3.13. These counts describe executable checks, not exhaustive security coverage or real-provider accuracy. No live provider export or bill has been validated.
