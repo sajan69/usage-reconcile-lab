@@ -22,6 +22,17 @@ jobs:
           python -m unittest discover -v
           usage-reconcile --version
           usage-reconcile demo
+      - name: Measure bounded synthetic workload
+        if: matrix.python == '3.12'
+        run: |
+          set -euo pipefail
+          usage-reconcile benchmark --rows 800 --repeats 3 > benchmark.json
+          python -c "import json; print('BENCHMARK_REPORT=' + json.dumps(json.load(open('benchmark.json')), separators=(',', ':')))"
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.python == '3.12'
+        with:
+          name: usage-workload
+          path: benchmark.json
   browser:
     runs-on: ubuntu-latest
     steps:

@@ -9,6 +9,7 @@ from .demo import generate, demo, comparison_demo
 from .storage import ingest, inspect
 from .analysis import compare
 from .reports import export
+from .benchmark import benchmark
 
 
 def main(argv=None):
@@ -37,6 +38,9 @@ def main(argv=None):
     commands.add_parser("demo", help="run isolated synthetic ingestion checks")
     comparison = commands.add_parser("demo-comparison", help="run exact synthetic comparison and optional reports")
     comparison.add_argument("--out", help="new directory for JSON/CSV/HTML reports")
+    workload = commands.add_parser("benchmark", help="measure bounded synthetic imports and comparisons")
+    workload.add_argument("--rows", type=int, default=800)
+    workload.add_argument("--repeats", type=int, default=3)
     args = parser.parse_args(argv)
     try:
         if args.command == "generate": result = generate(args.out)
@@ -46,6 +50,7 @@ def main(argv=None):
         elif args.command == "export":
             result = export(compare(args.db, args.app, args.provider), args.out, args.format)
         elif args.command == "demo-comparison": result = comparison_demo(args.out)
+        elif args.command == "benchmark": result = benchmark(args.rows, args.repeats)
         else: result = demo()
         print(json.dumps(result, indent=2, sort_keys=True, allow_nan=False))
         return 0
